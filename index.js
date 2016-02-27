@@ -6,11 +6,12 @@ var twitter = new Twit(twitInfo);
 var searchString = "world";
 
 var tweets;
+var lastTweet = "";
 
 function tweeting(){
 
 
-twitter.get('search/tweets', { q: searchString , count: 10, result_type: 'mixed', lang: 'en' }, function(err, data, response) {
+twitter.get('search/tweets', { q: searchString , count: 10, result_type: 'mixed', lang: 'en', include_entities: false }, function(err, data, response) {
   tweets = data.statuses;
   var selectTweet = tweets[Math.floor(Math.random()*tweets.length)] 
     refineTweet(selectTweet.text.replace(RegExp(searchString, "gi"),'Virtual Reality'));
@@ -28,16 +29,26 @@ function refineTweet(rawTweet){
 	
 	//remove links
 	rawTweet = rawTweet.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '');
+	rawTweet = rawTweet.substr(0,140);
 
-	console.log(rawTweet);
+	postTweet(rawTweet);
 }
 
-// twitter.post('statuses/update', { status: 'hello world!' }, function(err, data, response) {
-//   console.log(data);
-// });
-
+function postTweet(actualTweet){
+	if (actualTweet == lastTweet){ 
+		tweeting();
+	}else{
+		
+		console.log(actualTweet);
+		twitter.post('statuses/update', { status: actualTweet }, function(err, data, response) {
+		console.log(data);
+		});
+		lastTweet = actualTweet
+	}
+	}
 }
-
 
 // replace this function with setInterval() function to set frequency of tweets.
 tweeting();
+// setInterval(tweeting,10000);
+setInterval(tweeting,4*60*60000);
