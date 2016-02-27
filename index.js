@@ -17,6 +17,17 @@ twitter.get('search/tweets', { q: searchString , count: 10, result_type: 'mixed'
 });
 
 function refineTweet(rawTweet){
+	// remove mentions and replace
+	rawTweet = rawTweet.replace(/@([a-z\d_]+)/ig, 'Human Person');
+
+	//remove all #
+	rawTweet = rawTweet.replace(/#([a-z\d_]+)/ig, '');
+
+	//remove RT
+	rawTweet = rawTweet.replace('RT ', '');
+	
+	//remove links
+	rawTweet = rawTweet.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '');
 
 	console.log(rawTweet);
 }
@@ -25,9 +36,6 @@ function refineTweet(rawTweet){
 //   console.log(data);
 // });
 
-// twitter.get('followers/ids', { screen_name: 'mythilivenkat' },  function (err, data, response) {
-//   console.log(data)
-// })
 }
 
 
