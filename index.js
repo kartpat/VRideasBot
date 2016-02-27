@@ -7,14 +7,19 @@ var searchString = "world";
 
 var tweets;
 
-twitter.get('search/tweets', { q: searchString , count: 2, result_type: 'popular', lang: 'en' }, function(err, data, response) {
-  tweets = data.statuses;
-  for (index in tweets) {
-    console.log(tweets[index].text.replace(RegExp(searchString, "gi"),'Virtual Reality'));
-  }
-})
+function tweeting(){
 
-//.replace(RegExp(searchString, "gi"),'Virtual Reality')
+
+twitter.get('search/tweets', { q: searchString , count: 10, result_type: 'mixed', lang: 'en' }, function(err, data, response) {
+  tweets = data.statuses;
+  var selectTweet = tweets[Math.floor(Math.random()*tweets.length)] 
+    refineTweet(selectTweet.text.replace(RegExp(searchString, "gi"),'Virtual Reality'));
+});
+
+function refineTweet(rawTweet){
+
+	console.log(rawTweet);
+}
 
 // twitter.post('statuses/update', { status: 'hello world!' }, function(err, data, response) {
 //   console.log(data);
@@ -23,3 +28,8 @@ twitter.get('search/tweets', { q: searchString , count: 2, result_type: 'popular
 // twitter.get('followers/ids', { screen_name: 'mythilivenkat' },  function (err, data, response) {
 //   console.log(data)
 // })
+}
+
+
+// replace this function with setInterval() function to set frequency of tweets.
+tweeting();
