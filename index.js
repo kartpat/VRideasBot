@@ -2,14 +2,17 @@
 
 var Twit = require('twit');
 var twitInfo = require('./config.js');
-var twitter = new Twit(twitInfo);
-var searchString = "world";
+var twitter = new Twit(twitInfo); 
+var stateArray = require('./states.js');
 
 var tweets;
 var lastTweet = "";
 
 function tweeting(){
 
+// Selects a random state
+var searchString = getSearchString();
+console.log(searchString);
 
 twitter.get('search/tweets', { q: searchString , count: 10, result_type: 'mixed', lang: 'en', include_entities: false }, function(err, data, response) {
   tweets = data.statuses;
@@ -41,14 +44,23 @@ function postTweet(actualTweet){
 		
 		console.log(actualTweet);
 		twitter.post('statuses/update', { status: actualTweet }, function(err, data, response) {
-		console.log(data);
+		// console.log(data);
 		});
 		lastTweet = actualTweet
 	}
 	}
 }
 
+function getSearchString(){
+	var result;
+    var count = 0;
+    for (var prop in stateArray)
+        if (Math.random() < 1/++count)
+           result = prop;
+    return result;
+}
+
 // replace this function with setInterval() function to set frequency of tweets.
 tweeting();
 // setInterval(tweeting,10000);
-setInterval(tweeting,4*60*60000);
+setInterval(tweeting,3*60*60000);
